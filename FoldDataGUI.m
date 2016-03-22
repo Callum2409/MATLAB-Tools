@@ -13,7 +13,7 @@ function FoldDataGUI(x, y, e)
 %    Folds the data and includes an error bar
 nFolds = 1;
 maxFolds = 25;
-maxBeforeScroll = 11;
+maxBeforeScroll = 6;
 args = nargin;
 %create the figure, make not visible so can populate
 close all;
@@ -38,38 +38,64 @@ left = (1-((3*bWidth)/pNFArea(3)))/2;%work out the left insert for horizontal ce
 minus = uicontrol('Parent', pNF, 'Style', 'pushbutton', ...
     'String', '-', 'FontSize', 12, ...
     'HorizontalAlignment', 'center', ...
-    'Units', 'normalized', 'Position', [left, 2/bWidth, bWidth/pNFArea(3),(1-2/pNFArea(4))], ...
+    'Units', 'normalized', 'Position', [left, 2/bWidth, bWidth/pNFArea(3),(1-2/pNFArea(4))-.02], ...
     'Callback',@minus_Callback);
 
 number = uicontrol('Parent', pNF, 'Style', 'text', ...
-    'String', nFolds, 'FontSize', 12, ...
+    'String', nFolds, 'FontSize', 14, ...
     'Units', 'normalized', 'Position', [left+minus.Position(3), 2/bWidth, bWidth/pNFArea(3),.8]);
 
 plus = uicontrol('Parent', pNF, 'Style', 'pushbutton', ...
     'String', '+', 'FontSize', 12, ...
-    'Units', 'normalized', 'Position', [number.Position(1)+number.Position(3), 2/bWidth, bWidth/pNFArea(3),(1-2/pNFArea(4))], ...
+    'Units', 'normalized', 'Position', [number.Position(1)+number.Position(3), 2/bWidth, bWidth/pNFArea(3),(1-2/pNFArea(4))-.02], ...
     'Callback',@plus_Callback);
 
 align([minus, number, plus], 'VerticalAlignment', 'Middle');
 
-pSliders = uipanel('Parent', options, 'Title', '', 'FontSize', 14, 'Position', [.01, .01, .98, .82]);
+pTitles = uipanel('Parent', options, 'Title', 'Titles', 'FontSize', 14, 'Position', [.01, .52, .98, .3]);
 
-scrollSize = (nFolds-1)*0.11+0.1;
-pScroll= uicontrol('Parent', options, 'Visible', 'off', 'Parent', pSliders, 'Style', 'slider', ...
+uicontrol('Parent', pTitles, 'Style', 'text', ...
+    'String', 'Title:', 'FontSize', 14, ...
+    'Units', 'normalized', 'Position', [.01, .64, .25, .3]);
+
+title = uicontrol('Parent', pTitles, 'Style', 'edit', ...
+    'String', '', 'FontSize', 12, ...
+    'Units', 'normalized', 'Position', [.27, .69, .72, .3], 'Callback', @drawGraphs);
+
+uicontrol('Parent', pTitles, 'Style', 'text', ...
+    'String', 'X Label:', 'FontSize', 14, ...
+    'Units', 'normalized', 'Position', [.01, .3, .25, .3]);
+
+xlabel = uicontrol('Parent', pTitles, 'Style', 'edit', ...
+    'String', '', 'FontSize', 12, ...
+    'Units', 'normalized', 'Position', [.27, .35, .72, .3], 'Callback', @drawGraphs);
+
+uicontrol('Parent', pTitles, 'Style', 'text', ...
+    'String', 'Y Label:', 'FontSize', 14, ...
+    'Units', 'normalized', 'Position', [.01, -.04, .25, .3]);
+
+ylabel = uicontrol('Parent', pTitles, 'Style', 'edit', ...
+    'String', '', 'FontSize', 12, ...
+    'Units', 'normalized', 'Position', [.27, .01, .72, .3], 'Callback', @drawGraphs);
+
+pSliders = uipanel('Parent', options, 'Title', '', 'FontSize', 14, 'Position', [.01, .01, .98, .5]);
+
+scrollSize = (nFolds-1)*0.2+0.2;
+pScroll= uicontrol('Visible', 'off', 'Parent', pSliders, 'Style', 'slider', ...
     'Units', 'normalized', 'Position', [.94,.01,.05,.98], ...
     'Max', 0, 'Callback', @drawSliders);
 
 for s = 1:maxFolds
-    pos(s) = uicontrol('Parent', options, 'Visible', 'off', 'Parent', pSliders, 'Style', 'edit', 'String', s, ...
+    pos(s) = uicontrol('Visible', 'off', 'Parent', pSliders, 'Style', 'edit', 'String', s, ...
         'Units', 'normalized', 'FontSize', 12, 'Callback', @editedPos, 'Tag', sprintf('%i', s));
     
     range = max(x)-min(x);
     
-    sliders(s) = uicontrol('Parent', options, 'Visible', 'off', 'Parent', pSliders, 'Style', 'slider', ...
+    sliders(s) = uicontrol('Visible', 'off', 'Parent', pSliders, 'Style', 'slider', ...
         'Units', 'normalized', 'Min', -range, 'Max', range, 'Callback', @drawGraphs);
     addlistener(sliders(s),'Value','PreSet',@drawGraphs);
     
-    cols(s) = uicontrol('Parent', options, 'Visible', 'off', 'Parent', pSliders, 'Style', 'pushbutton', ...
+    cols(s) = uicontrol('Visible', 'off', 'Parent', pSliders, 'Style', 'pushbutton', ...
         'Units', 'normalized', 'BackgroundColor', defaultColours(mod(s, length(defaultColours))+1, :), 'Callback', @colour_Callback);
     
 end
@@ -97,8 +123,8 @@ drawSliders();
         drawSliders();
     end
 
-    function drawSliders()
-        scrollSize = max((nFolds-maxBeforeScroll-1)*0.09+0.1, 0);
+    function drawSliders(~,~)
+        scrollSize = max((nFolds-maxBeforeScroll-1)*.15+0.1, 0);
         pScroll.Min = -scrollSize;
         pScroll.SliderStep = [1/nFolds, 1/nFolds];
         
@@ -113,9 +139,9 @@ drawSliders();
         end
         
         for s = 1:maxFolds
-            pos(s).Position = [.01, 1.02-s*.09-pScroll.Value, .2, .06];
-            sliders(s).Position = [.22, 1.02-s*.09-pScroll.Value, .5, .06];
-            cols(s).Position = [.73, 1.02-s*.09-pScroll.Value, .2, .06];
+            pos(s).Position = [.01, 1.03-s*.15-pScroll.Value, .2, .1];
+            sliders(s).Position = [.22, 1.03-s*.15-pScroll.Value, .5, .1];
+            cols(s).Position = [.73, 1.03-s*.15-pScroll.Value, .2, .1];
             
             if s<=nFolds
                 pos(s).Visible = 'on';
@@ -148,6 +174,7 @@ drawSliders();
         clf('reset');
         
         subplot(2, 1, 1);
+        GraphTitles(title.String, xlabel.String, ylabel.String);
         hold on;
         if args == 3
             errorbar(x, y, e);
@@ -156,6 +183,7 @@ drawSliders();
         end
         
         subplot(2, 1, 2);
+        GraphTitles(strcat(title.String,' zoom'), xlabel.String, ylabel.String);
         hold on;
         if args == 3
             errorbar(x, y, e);
