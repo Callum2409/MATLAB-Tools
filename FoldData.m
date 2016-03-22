@@ -1,16 +1,16 @@
 function FoldData(x, y, e)
 %FoldData
-%Run this first!!!
 %Will produce a figure window with two plots
 %The top contains the full data range
 %The bottom is zoomed in on the range so a closest fit can be obtained
 %A second window shows the number of folds and sliders to alter the value
 %
 %Usage:
-%FoldDataGUI(x, y)
+%FoldData(x, y)
 %    Folds the data with no error bars
-%FoldDataGUI(x, y, e)
+%FoldData(x, y, e)
 %    Folds the data and includes an error bar
+
 nFolds = 1;
 maxFolds = 25;
 maxBeforeScroll = 6;
