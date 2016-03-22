@@ -7,7 +7,5 @@ Usage information is found in the comments at the top of each file
 There are currently 3 main scripts:
 
 1. GraphTitles - add a title and axis labels in one command and set the font sizes
-2. 
 2. SaveFigure - save the specified figure with a specified aspect ratio
-3. 
 3. FoldDataGUI - fold a set of input data to calculate the periodicity of the data. This script uses FoldData but should be called first
