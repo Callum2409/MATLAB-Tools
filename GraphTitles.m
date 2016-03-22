@@ -1,6 +1,6 @@
 function GraphTitles(ti, xl, yl, zl, tiSize, lSize, mSize)
 %GraphTitles
-%Add the title, x label and y label to the graph and set font sizes
+%Add the title and axis labels to the graph and set font sizes
 %If no sizes defined, uses a standard sizing of 24, 22, 20
 %
 %Usage:
