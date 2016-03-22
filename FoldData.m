@@ -1,5 +1,5 @@
-function FoldDataGUI(x, y, e)
-%FoldDataGUI
+function FoldData(x, y, e)
+%FoldData
 %Run this first!!!
 %Will produce a figure window with two plots
 %The top contains the full data range
