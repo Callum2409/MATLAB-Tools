@@ -1,9 +1,17 @@
 function GraphTitles(ti, xl, yl, zl, tiSize, lSize, mSize)
 %GraphTitles
 %Add the title, x label and y label to the graph and set font sizes
+%If no sizes defined, uses a standard sizing of 24, 22, 20
+%
+%Usage:
+%GraphTitles(title, xlabel, ylabel)
+%    Will use standard sizing
+%GraphTitles(title, xlabel, ylabel, zlabel)
+%    Includes z axis label and uses standard sizing
+%GraphTitles(title, xlabel, ylabel, titleSize, labelSize, markerSize)
+%    No z axis label, but custom label sizes
 %GraphTitles(title, xlabel, ylabel, zlabel, titleSize, labelSize, markerSize)
-%works with no definied zlabel
-%if no sizes defined, uses standard 24, 22, 20
+%    Includes z axis label and custom axis sizing
 
 switch(nargin)
     case 3
